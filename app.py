@@ -379,7 +379,7 @@ if st.session_state.active_page == "tutorial":
             <div class="workflow-badge">Langkah 02</div>
             <div class="workflow-title">Pilih Format & Generate</div>
             <div class="workflow-desc">
-                Pilih format naskah yang diinginkan (Laporan Kedinasan Lengkap atau Ringkasan Eksekutif Pimpinan), lalu klik <strong>"Buat Laporan Otomatis"</strong>.
+                Pilih format naskah yang diinginkan (Laporan Resmi Kedinasan, Ringkasan Eksekutif, atau Laporan Respon Cepat Lapangan), lalu klik <strong>"Buat Laporan Naratif Otomatis"</strong>.
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -507,9 +507,9 @@ elif st.session_state.active_page == "workspace":
             format_pilihan = st.selectbox(
                 "Format Naskah:",
                 [
-                    "Laporan Resmi Kedinasan (Lengkap)",
-                    "Ringkasan Eksekutif (Singkat & Padat)",
-                    "Laporan Respon Cepat Lapangan (Fokus KLB)"
+                    "Laporan Resmi Kedinasan",
+                    "Ringkasan Eksekutif",
+                    "Laporan Respon Cepat Lapangan"
                 ],
                 index=0
             )
@@ -527,54 +527,100 @@ elif st.session_state.active_page == "workspace":
                     except Exception:
                         table_md = df.to_csv(index=False)
                     
-                    if "Ringkasan Eksekutif" in format_pilihan:
+                    if format_pilihan == "Ringkasan Eksekutif":
                         panduan_format_khusus = f"""
-STRUKTUR NASKAH RINGKASAN EKSEKUTIF (Singkat, Padat, Maksimal 3-4 Bagian):
-# RINGKASAN EKSEKUTIF SURVEILANS KESEHATAN MINGGUAN
+PANDUAN FORMAT KHUSUS: RINGKASAN EKSEKUTIF (GAYA PRESENTASI EKSEKUTIF / PPT SLIDE BULLET-POINTS)
+Karakter: Sangat efektif, deskriptif, dan efisien. Sajikan dalam format poin-poin terstruktur layaknya slide presentasi eksekutif untuk Kepala Dinas / Pengambil Kebijakan.
+
+# RINGKASAN EKSEKUTIF SURVEILANS KESEHATAN
 **{st.session_state.instansi.upper()}**
 *Unit Pengelola: {st.session_state.bidang}*
 *Periode: {periode_ini}*
 
 ---
 
-### 1. IKHTISAR SITUASI & STATUS KEWASPADAAN
-- Gambaran umum beban penyakit surveilans minggu ini secara ringkas (1-2 paragraf).
+### [SLIDE 1] STATUS KEWASPADAAN & KEY HIGHLIGHTS
+- **Status Epidemiologi:** [Klasifikasikan status wilayah secara tegas: WASPADA / SIAGA / AMAN]
+- **Ringkasan Beban Kasus:** [Total beban kasus per indikator surveilans utama beserta tren perubahan]
+- **Sinyal Kritis:** [Poin anomali, klaster baru, atau lonjakan kasus paling signifikan]
+- **Kesiapsiagaan Sistem:** [Status kapasitas faskes primer, logistik, dan ketersediaan tim respon]
 
-### 2. TEMUAN KUNCI & PEMETAAN WILAYAH PRIORITAS (HOTSPOT)
-- Puskesmas/Kecamatan dengan kasus tertinggi (Red Zone).
-- Sorotan indikator penyakit yang membutuhkan perhatian khusus.
+### [SLIDE 2] PEMETAAN HOTSPOT & INDIKATOR KRITIS
+- **Wilayah Red Zone (Prioritas 1):** [Daftar Puskesmas/Kecamatan dengan kasus tertinggi dan status risikonya]
+- **Wilayah Yellow Zone (Waspada):** [Wilayah dengan indikasi tren peningkatan kasus]
+- **Wilayah Green Zone (Terkendali):** [Wilayah dengan angka transmisi stabil/rendah]
+- **Penyakit Beban Tertinggi:** [Indikator penyakit yang mendominasi dan memerlukan intervensi khusus]
 
-### 3. INTERVENSI MENDESAK & REKOMENDASI TAKTIS
-- 3-5 poin aksi taktis prioritas yang harus segera dieksekusi tim lapangan dan faskes.
+### [SLIDE 3] DETERMINAN UTAMA & IMPLIKASI RISIKO
+- **Faktor Determinan Lapangan:** [2-3 pemicu utama: faktor sanitasi/vektor/iklim/mobilitas/asupan gizi]
+- **Populasi Berisiko Tinggi:** [Kelompok rentan terdampak: balita, usia produktif, atau lansia]
+- **Proyeksi & Implikasi Risiko:** [Estimasi dampak 1-2 minggu ke depan jika tidak segera diintervensi]
 
-### 4. PENGESAHAN LAPORAN
-- Tempat, tanggal pelaporan ({datetime.now().strftime('%d %B %Y')}) dan slot tanda tangan Kepala Bidang/Penanggung Jawab.
+### [SLIDE 4] ACTION PLAN & PRIORITAS INTERVENSI TAKTIS
+- **Respon Taktis Cepat (1x24 - 48 Jam):** [Langkah operasional mendesak di tingkat Puskesmas & Tim Lapangan]
+- **Pengendalian Faktor Risiko:** [Tindakan intervensi lingkungan & pengendalian vektor spesifik]
+- **Kebutuhan Logistik Mendesak:** [Alokasi RDT, obat esensial, larvasida/abate, dan BHP laboratorium]
+- **PIC & Kolaborasi Lintas Sektor:** [Penanggung jawab lapangan serta instruksi bagi Camat & Lurah]
+
+### [PENGESAHAN EKSEKUTIF]
+- Tempat & Tanggal Pelaporan: {datetime.now().strftime('%d %B %Y')}
+- Disahkan oleh: Kepala Bidang / Penanggung Jawab Surveilans
 """
-                    elif "Respon Cepat" in format_pilihan:
+                    elif format_pilihan == "Laporan Respon Cepat Lapangan":
                         panduan_format_khusus = f"""
-STRUKTUR NASKAH LAPORAN RESPON CEPAT LAPANGAN (Fokus Potensi KLB):
-# LAPORAN RESPON CEPAT SITUASI EPIDEMIOLOGI & POTENSI KLB
+PANDUAN FORMAT KHUSUS: LAPORAN RESPON CEPAT LAPANGAN (INVESTIGASI TANGGAP DARURAT KLB - SANGAT DETAIL & EKSPLISIT)
+Karakter: Laporan teknis operasional investigasi lapangan yang sangat mendalam, rinci, dan eksplisit untuk Tim Gerak Cepat (TGC) dan penanganan wabah.
+
+# LAPORAN RESPON CEPAT INVESTIGASI LAPANGAN & PENANGGULANGAN KLB
 **{st.session_state.instansi.upper()}**
-*Unit Pengelola: {st.session_state.bidang}*
-*Periode: {periode_ini}*
+*Unit Pengelola: {st.session_state.bidang} (Tim Gerak Cepat Surveilans)*
+*Periode Laporan: {periode_ini}*
 
 ---
 
-### 1. NOTIFIKASI DINI & SINYAL KEWASPADAAN KLB
-- Identifikasi klaster wilayah berstatus Waspada/Siaga/KLB.
+### I. KRONOLOGI NOTIFIKASI & VERIFIKASI SINYAL LAPANGAN
+- **Waktu Penerimaan Sinyal Awal:** [Catat tanggal, jam notifikasi pertama, dan sumber laporan SKDR/Faskes]
+- **Verifikasi Lapangan & Validasi Kasus:** [Langkah konfirmasi gejala klinis, cross-check rekam medis, dan validasi data riil di faskes pelapor]
+- **Klasifikasi Tingkat Ancaman:** [Tentukan status kedaruratan: Siaga KLB / KLB Terkonfirmasi / Klaster Terisolasi]
 
-### 2. HASIL VERIFIKASI FAKTOR RISIKO LAPANGAN
-- Determinan lingkungan, vektor/sanitasi, dan riwayat mobilitas kasus.
+### II. DEFINISI KASUS OPERASIONAL & KRITERIA DIAGNOSTIK LAPANGAN
+- **Kasus Suspek:** [Kriteria gejala klinis awal di tingkat komunitas/faskes]
+- **Kasus Probabel:** [Kriteria klinis spesifik disertai riwayat kontak epidemiologi erat]
+- **Kasus Konfirmasi:** [Kriteria penegakan pasti melalui tes laboratorium/RDT/baku emas]
+- **Alur Triase & Manajemen Spesimen:** [Prosedur sampling, jenis spesimen, tata cara preservasi, dan laboratorium rujukan rujukan]
 
-### 3. PROTOKOL PENANGGULANGAN TAKTIS (1x24 - 72 JAM)
-- Penyelidikan Epidemiologi (PE), larvasidasi/fogging fokus, rujukan kasus berat, dan logistik darurat.
+### III. HASIL PENYELIDIKAN EPIDEMIOLOGI (PE) & PEMETAAN KLASTER
+- **Distribusi Menurut Karakteristik Pasien (Person):** [Proporsi kelompok umur rentan, rasio jenis kelamin, status imunisasi/komorbid, status klinis rawat inap/jalan]
+- **Distribusi Menurut Spasial/Wilayah (Place):** [Pemetaan RT/RW/Kelurahan hotspot, titik fokus penyebaran, radius penularan aktif]
+- **Distribusi Menurut Waktu (Time):** [Pola kurva epidemiologi harian/mingguan, masa inkubasi terpendek-terpanjang, onset kasus primer vs sekunder]
+- **Indikator Epidemiologi Kuantitatif:** [Perhitungan Attack Rate (AR), Case Fatality Rate (CFR), dan Secondary Attack Rate]
+- **Hasil Pelacakan Kontak Erat (Contact Tracing):** [Total kontak erat terlacak, hasil skrining klinis, dan kepatuhan isolasi/karantina]
 
-### 4. KOORDINASI LINTAS SEKTOR & LEMBAR PENGESAHAN
-- Kebutuhan dukungan Camat/Lurah serta pengesahan penanggung jawab surveilans ({datetime.now().strftime('%d %B %Y')}).
+### IV. INVESTIGASI DETERMINAN LINGKUNGAN, VEKTOR & SANITASI
+- **Inspeksi Sanitasi Lingkungan:** [Kondisi saluran drainase, penumpukan sampah, sarana air bersih, ventilasi hunian]
+- **Survei Entomologi & Kepadatan Vektor:** [Angka Bebas Jentik (ABJ), Container Index (CI), House Index (HI), tempat perindukan alami/buatan]
+- **Identifikasi Sumber Pajanan:** [Analisis potensi cemaran pangan/air atau rute transmisi kontak/droplet di lokasi klaster]
+
+### V. PROTOKOL PENANGGULANGAN TAKTIS (1x24 - 72 JAM)
+- **Tatalaksana Medis & Jalur Rujukan:** [SOP triase darurat faskes primer, ketersediaan bed isolasi, dan koordinasi rujukan cepat ke RSUD rujukan]
+- **Pengendalian Fokus Lapangan:** [Pelaksanaan Fogging fokus 2 siklus / Larvasidasi massal / Kaporitisasi / Disinfeksi area terpapar]
+- **Mobilisasi & Distribusi Logistik Darurat:** [Inventarisasi stok dan droping RDT, obat suportif/spesifik, cairan infus, abate, APD, dan media transport laboratorium]
+- **Pembatasan Transmisi Lokal:** [Prosedur isolasi kasus aktif, manajemen karantina kontak erat, dan pembatasan kerumunan di zona merah]
+
+### VI. KOORDINASI SATGAS LINTAS SEKTOR & MANAJEMEN RISIKO
+- **Matriks Pembagian Tugas Satgas Wilayah:** [Peran operasional Camat, Lurah, Babinsa, Bhabinkamtibmas, Forum RW/RT, Kader Kesehatan/Jumantik]
+- **Komunikasi Risiko Publik (Risk Communication):** [Pesan edukasi PHBS terarah, klarifikasi hoaks, panduan kewaspadaan warga tanpa menimbulkan kepanikan]
+- **Jadwal Monitoring Harian:** [Mekanisme pelaporan harian kurva kasus hingga 2 kali masa inkubasi terpanjang tanpa kasus baru]
+
+### VII. LEMBAR PENGESAHAN TIM GERAK CEPAT (TGC)
+- Tempat & Tanggal: {datetime.now().strftime('%d %B %Y')}
+- Ditandatangani oleh: Ketua Tim Gerak Cepat & Koordinator Surveilans Epidemiologi
 """
                     else:
                         panduan_format_khusus = f"""
-STRUKTUR LAPORAN KEDINASAN LENGKAP:
+PANDUAN FORMAT KHUSUS: LAPORAN RESMI KEDINASAN (DRAF NASKAH DINAS LENGKAP & KOMPREHENSIF)
+Karakter: Dokumen resmi kedinasan lengkap berstruktur baku tata naskah dinas, berbasis bukti epidemiologi, formal, mendalam, dan siap ditandatangani pimpinan.
+
 # LAPORAN SURVEILANS EPIDEMIOLOGI MINGGUAN
 **{st.session_state.instansi.upper()}**
 *Unit Pengelola: {st.session_state.bidang}*
@@ -582,33 +628,36 @@ STRUKTUR LAPORAN KEDINASAN LENGKAP:
 
 ---
 
-### I. LATAR BELAKANG DAN DASAR PELAKSANAAN
-- Dasar hukum singkat penyelenggaraan SKDR dan tujuan surveilans periode ini.
-- Cakupan wilayah dan fasilitas kesehatan yang dilaporkan.
+### BAB I. LATAR BELAKANG DAN DASAR PELAKSANAAN
+- **1.1 Dasar Hukum Penyelenggaraan:** Regulasi SKDR, Permenkes terkait surveilans penyakit menular dan tidak menular.
+- **1.2 Tujuan Surveilans:** Tujuan umum dan khusus pemantauan situasi kesehatan masyarakat pada periode berjalan.
+- **1.3 Ruang Lingkup & Cakupan Faskes:** Deskripsi wilayah administratif, jumlah unit Puskesmas pelapor, serta tingkat kelengkapan dan ketepatan laporan (completeness & timeliness).
 
-### II. ANALISIS SITUASI DAN TREN BEBAN KASUS
-- Ringkasan total agregat kasus surveilans.
-- Pemetaan wilayah dengan beban kasus tertinggi (Red Zone / Hotspot) dan wilayah aman.
-- Analisis perbandingan antar indikator/penyakit.
+### BAB II. ANALISIS SITUASI DAN TREN BEBAN KASUS
+- **2.1 Agregat Kasus Wilayah:** Analisis menyeluruh beban kasus penyakit bersumber data rekapitulasi Puskesmas.
+- **2.2 Pemetaan Hotspot & Zonasi Wilayah:** Identifikasi daerah dengan beban kasus tertinggi (Red Zone), daerah waspada/siaga, dan daerah aman (Green Zone).
+- **2.3 Analisis Komparatif Indikator:** Perbandingan beban kasus antar indikator penyakit dan evaluasi proporsi populasi berisiko.
 
-### III. IDENTIFIKASI FAKTOR RISIKO DAN KENDALA LAPANGAN
-- Analisis faktor determinan (lingkungan, cuaca, mobilitas penduduk, sanitasi/PSN, pola gizi balita).
-- Penilaian risiko potensi eskalasi Kejadian Luar Biasa (KLB).
+### BAB III. IDENTIFIKASI FAKTOR RISIKO DAN DETERMINAN KESEHATAN
+- **3.1 Faktor Lingkungan dan Sanitasi:** Pengaruh curah hujan/cuaca, saluran drainase, kebersihan lingkungan, dan kepadatan vektor jentik.
+- **3.2 Faktor Perilaku dan Mobilitas Penduduk:** Kebiasaan PHBS, mobilitas penduduk antar wilayah, serta tingkat kepatuhan penanganan dini.
+- **3.3 Penilaian Risiko Epidemiologi:** Evaluasi potensi eskalasi penyebaran kasus dan ancaman Kejadian Luar Biasa (KLB).
 
-### IV. REKOMENDASI TINDAKAN DAN INTERVENSI STRATEGIS
-- **A. Tindakan Taktis Cepat (1-7 Hari):** Penyelidikan Epidemiologi (PE), larvasidasi/fogging fokus, rujukan faskes, droping logistik.
-- **B. Tindakan Pencegahan (Jangka Menengah):** Penguatan kader jumantik, posyandu terpadu, edukasi masyarakat.
-- **C. Koordinasi Lintas Sektor:** Kerja sama dengan Camat, Lurah, Dinas Lingkungan Hidup, dan aparat wilayah.
+### BAB IV. REKOMENDASI TINDAKAN DAN INTERVENSI STRATEGIS
+- **4.1 Intervensi Taktis Jangka Pendek (1-7 Hari):** Penyelidikan Epidemiologi (PE), larvasidasi/pengendalian fokus, penguatan surveilans aktif, penjaminan logistik faskes.
+- **4.2 Intervensi Pencegahan Jangka Menengah:** Revitalisasi kader posyandu/jumantik, edukasi berkelanjutan ke masyarakat, penguatan deteksi dini faskes primer.
+- **4.3 Koordinasi Lintas Sektoral:** Kolaborasi terpadu dengan Camat, Lurah, Dinas Lingkungan Hidup, dan pemangku kepentingan wilayah.
 
-### V. KESIMPULAN DAN LEMBAR PENGESAHAN
-- Ringkasan eksekutif 1 paragraf.
-- Tempat dan tanggal pelaporan ({datetime.now().strftime('%d %B %Y')}).
-- Kolom tanda tangan Penanggung Jawab Surveilans.
+### BAB V. KESIMPULAN DAN LEMBAR PENGESAHAN
+- **5.1 Kesimpulan Eksekutif:** Sintesis situasi epidemiologi dalam kesimpulan naratif komprehensif.
+- **5.2 Lembar Pengesahan Resmi:**
+  - Tempat & Tanggal Pelaporan: {datetime.now().strftime('%d %B %Y')}
+  - Pejabat Pengesah: Kepala {st.session_state.instansi} / Penanggung Jawab Teknis Surveilans.
 """
 
                     prompt = f"""
 Anda adalah Tenaga Ahli Epidemiologi dan Kepala Tim Surveilans di {st.session_state.instansi}.
-Tugas Anda: Menyusun Draf Laporan Naratif Resmi Mingguan yang komprehensif, berbasis bukti, dan lugas berdasarkan data tabel berikut:
+Tugas Anda: Menyusun Draf Dokumen Resmi berdasarkan format '{format_pilihan}' secara komprehensif, berbasis bukti, dan lugas berdasarkan data tabel berikut:
 
 DATA SURVEILANS:
 {table_md}
@@ -621,7 +670,7 @@ PARAMETER DOKUMEN:
 
 {panduan_format_khusus}
 
-Gunakan bahasa Indonesia formal kedinasan yang baku, terstruktur, dan tidak bertele-tele.
+Gunakan bahasa Indonesia formal kedinasan yang baku, terstruktur rapi, dan langsung terisi dengan analisis data yang tajam tanpa menyisakan placeholder kosong.
 """
                     generated_text = ""
                     models_to_try = [st.session_state.model_name, "gemini-3.5-flash", "gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite"]
