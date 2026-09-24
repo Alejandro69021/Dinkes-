@@ -1,0 +1,13 @@
+{
+  "name": "dinkes-surveilans-generator",
+  "version": "1.0.0",
+  "description": "Generator Laporan Naratif Surveilans Dinas Kesehatan dengan Gemini AI",
+  "scripts": {
+    "dev": "uv run streamlit run app.py --server.port 8501 --server.address 127.0.0.1",
+    "start": "uv run streamlit run app.py --server.port 8501 --server.address 127.0.0.1",
+    "app": "uv run streamlit run app.py"
+  },
+  "keywords": ["streamlit", "surveilans", "dinkes", "gemini-ai"],
+  "author": "",
+  "license": "ISC"
+}
